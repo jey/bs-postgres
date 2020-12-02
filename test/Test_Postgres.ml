@@ -28,7 +28,7 @@ describe "Postgres" @@ fun () -> begin
           |> Pool.Promise.connect
           |> then_ test_query
           |> then_ test_query_object
-          |> then_ Pool.Pool_Client.release
+          |> then_ Pool.Client.release
 
       in
         after @@ fun () -> pool |> Pool.Promise.end_

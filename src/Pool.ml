@@ -30,7 +30,7 @@ module Internal = struct
     config = "" [@@bs.obj]
 end
 
-module Pool_Client = struct
+module Client = struct
   include Client
 
   external _release : t -> unit = "release"[@@bs.send ]
@@ -40,7 +40,7 @@ end
 
 module Callback = struct
   external connect:
-  t -> (err:Js.Exn.t Js.nullable -> client:Pool_Client.t -> release:(unit -> unit) -> unit) -> unit = "" [@@bs.send]
+  t -> (err:Js.Exn.t Js.nullable -> client:Client.t -> release:(unit -> unit) -> unit) -> unit = "" [@@bs.send]
 
   external query:
   t -> text:string -> ?values:'a -> (err:Js.Exn.t Js.nullable -> result:'b Result.t -> unit) -> unit = "" [@@bs.send]
@@ -58,7 +58,7 @@ module Callback = struct
 end
 
 module Promise = struct
-  external connect: t -> Pool_Client.t Js.Promise.t = "" [@@bs.send]
+  external connect: t -> Client.t Js.Promise.t = "" [@@bs.send]
 
   external query: string -> ?values:'a -> 'b Result.t Js.Promise.t = "" [@@bs.send.pipe: t]
 
