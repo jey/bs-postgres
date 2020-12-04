@@ -41,7 +41,7 @@ let test_query client =
   client
   |> query "SELECT * FROM fruits WHERE id > $1" ~values:[|1|]
   |> then_ @@ fun (result : fruit Result.t)  ->
-     expect result##rows |> to_deep_equal [|
+     expect result.rows |> to_deep_equal [|
        [%bs.obj { id = 2; name = "banana"    }];
        [%bs.obj { id = 3; name = "blueberry" }];
        [%bs.obj { id = 4; name = "raspberry" }]
@@ -54,7 +54,7 @@ let test_query_object client =
      ~text:"SELECT vendor_name AS vendor, name AS fruit FROM vendors JOIN fruits ON id = fruits_id WHERE vendor_name = $1"
      ~values:[|"frank"|] ()
   |> then_ @@ fun (result : vendor Result.t) ->
-     expect result##rows |> to_deep_equal [|
+     expect result.rows |> to_deep_equal [|
        [%bs.obj { fruit = "banana"; vendor = "frank" }];
        [%bs.obj { fruit = "blueberry"; vendor = "frank" }]
      |];

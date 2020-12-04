@@ -1,13 +1,21 @@
 type t
-type config =
-  < user: string Js.undefined
-  ; password: string Js.undefined
-  ; host: string Js.undefined
-  ; database: string Js.undefined
-  ; port: int Js.undefined
-  ; ssl: <rejectUnauthorized: bool; ca: string; key: string; cert: string> Js.t Js.undefined
-  ; statement_timeout: int Js.undefined
-  >  Js.t
+
+type sslConfig = {
+  rejectUnauthorized: bool;
+  ca: string;
+  key: string;
+  cert: string;
+}
+
+type config = {
+  user: string Js.undefined;
+  password: string Js.undefined;
+  host: string Js.undefined;
+  database: string Js.undefined;
+  port: int Js.undefined;
+  ssl: sslConfig Js.undefined;
+  statement_timeout: int Js.undefined;
+}
 
 module Internal = struct
   external make: config -> t = "Client" [@@bs.module "pg"] [@@bs.new]

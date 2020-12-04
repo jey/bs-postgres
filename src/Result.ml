@@ -1,9 +1,14 @@
-type 'a t =
-  < rows:     'a array
-  ; fields:   <name: string; dataTypeID: int> Js.t array
-  ; rowCount: int
-  ; command:  string
-  > Js.t
+type fieldSpec = {
+  name: string;
+  dataTypeID: int;
+}
+
+type 'a t = {
+  rows: 'a array;
+  fields:  fieldSpec array;
+  rowCount: int;
+  command:  string;
+}
 
 let map f x =
   [%bs.obj { rows     = Js.Array.map f x##rows
