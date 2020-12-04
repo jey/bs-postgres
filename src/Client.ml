@@ -24,36 +24,13 @@ module Internal = struct
     config = "" [@@bs.obj]
 end
 
-module Callback = struct
-  external connect: t -> (Js.Exn.t Js.nullable -> unit) -> unit = "" [@@bs.send]
+external connect: t -> unit Js.Promise.t = "" [@@bs.send]
 
-  external query:
-  t -> text:string -> ?values:'a -> (err:Js.Exn.t Js.nullable -> result:'b Result.t -> unit) -> unit = "" [@@bs.send]
+external query: string -> ?values:'a -> 'b Result.t Js.Promise.t = "" [@@bs.send.pipe: t]
 
-  external query':
-  t -> 'a Query.t -> (Js.Exn.t Js.nullable -> 'a Result.t Js.nullable -> unit) -> unit = "query" [@@bs.send]
+external query': 'a Query.t -> 'a Result.t Js.Promise.t = "query" [@@bs.send.pipe: t]
 
-  external end_: t -> (Js.Exn.t Js.nullable -> unit) -> unit = "end" [@@bs.send]
-
-  external on:
-    t ->
-    ([ `error        of Js.Exn.t -> unit
-     | `end_         of unit -> unit
-     | `notification of <processId: int; channel: string; payload: string Js.nullable> Js.t -> unit
-     | `notice       of string -> unit
-     ] [@bs.string]) ->
-    unit = "" [@@bs.send]
-end
-
-module Promise = struct
-  external connect: t -> unit Js.Promise.t = "" [@@bs.send]
-
-  external query: string -> ?values:'a -> 'b Result.t Js.Promise.t = "" [@@bs.send.pipe: t]
-
-  external query': 'a Query.t -> 'a Result.t Js.Promise.t = "query" [@@bs.send.pipe: t]
-
-  external end_: t -> unit Js.Promise.t = "end" [@@bs.send]
-end
+external end_: t -> unit Js.Promise.t = "end" [@@bs.send]
 
 let make ?user ?password ?host ?database ?port ?ssl ?statement_timeout () =
   Internal.make @@ Internal.makeConfig ?user ?password ?host ?database ?port ?ssl ?statement_timeout ()

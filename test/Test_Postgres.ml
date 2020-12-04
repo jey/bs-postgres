@@ -25,13 +25,13 @@ describe "Postgres" @@ fun () -> begin
       let _ =
         it "should return a releasable client object that can successfully perform queries" @@ fun () ->
           pool
-          |> Pool.Promise.connect
+          |> Pool.connect
           |> then_ test_query
           |> then_ test_query_object
           |> then_ Pool.Client.release
 
       in
-        after @@ fun () -> pool |> Pool.Promise.end_
+        after @@ fun () -> pool |> Pool.end_
     end
 
   in

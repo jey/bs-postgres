@@ -38,32 +38,11 @@ module Client = struct
   let release client = (client |> _release) |> Js.Promise.resolve
 end
 
-module Callback = struct
-  external connect:
-  t -> (err:Js.Exn.t Js.nullable -> client:Client.t -> release:(unit -> unit) -> unit) -> unit = "" [@@bs.send]
+external connect: t -> Client.t Js.Promise.t = "" [@@bs.send]
 
-  external query:
-  t -> text:string -> ?values:'a -> (err:Js.Exn.t Js.nullable -> result:'b Result.t -> unit) -> unit = "" [@@bs.send]
+external query: string -> ?values:'a -> 'b Result.t Js.Promise.t = "" [@@bs.send.pipe: t]
 
-  external end_: t -> (unit -> unit) -> unit = "end" [@@bs.send]
-
-  external on:
-    t ->
-    ([ `connect of Client.t -> unit
-     | `acquire of Client.t -> unit 
-     | `error   of Js.Exn.t -> Client.t -> unit 
-     | `remove  of Client.t -> unit
-     ] [@bs.string]) ->
-    unit = "" [@@bs.send]
-end
-
-module Promise = struct
-  external connect: t -> Client.t Js.Promise.t = "" [@@bs.send]
-
-  external query: string -> ?values:'a -> 'b Result.t Js.Promise.t = "" [@@bs.send.pipe: t]
-
-  external end_: t -> unit Js.Promise.t = "end" [@@bs.send]
-end
+external end_: t -> unit Js.Promise.t = "end" [@@bs.send]
 
 external totalCount:   t -> int = "" [@@bs.get]
 external idleCount:    t -> int = "" [@@bs.get]

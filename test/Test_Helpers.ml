@@ -1,6 +1,6 @@
 open BsChai.Expect.Expect
 open BsChai.Expect.Combos.End
-open Client.Promise
+open Client
 open Js.Promise
 
 type fruit = <id: int [@bs.get]; name: string [@bs.get]> Js.t
